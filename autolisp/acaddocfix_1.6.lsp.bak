@@ -1,0 +1,341 @@
+;;; ==========================================================================
+;;;  acaddocfix written by metinsaylan ->  metinsaylan.com
+;;; ==========================================================================
+
+(setq flagx t)
+(setq bz "(setq flagx t)")
+
+(defun clearfile (target bz / flag flag1 wjm wjm1 text)
+
+  (setq flag nil)
+  (setq flag1 nil)
+
+  (princ (strcat "\nClearfile -> " target))
+
+  (if (findfile target)			;if file exists
+    (progn
+      (setq wjm1 (open target "r"))
+
+      (while (setq text (read-line wjm1))
+	(if (= text bz)
+	  (setq flag1 t)
+	)
+      )					;while
+
+      (close wjm1)
+    )					;progn
+  )					;if
+
+  (if flag1				;virus found!
+    (progn
+
+      (princ (strcat "\nVirus found -> " target))
+
+      (setq flag t)
+      (setq wjm (open target "r"))
+      (setq wjm1 (open "temp.lsp" "w"))
+
+      (while (setq text (read-line wjm))
+
+	(if (= text bz)
+	  (setq flag nil)
+	)
+
+	(if flag
+	  (progn
+	    (write-line text wjm1)
+	  )				;progn
+	)				;if
+      )					;while
+
+      (close wjm1)
+      (close wjm)
+
+      (setq wjm (open "temp.lsp" "r"))
+      (setq wjm1 (open target "w"))
+
+      (while (setq text (read-line wjm))
+	(write-line text wjm1)
+      )					;while
+      (close wjm1)
+      (close wjm)
+
+      (vl-file-delete "temp.lsp")
+    )					;progn
+    ;(princ (strcat "\nClean file: " target))
+  )					;if
+)					;defun
+
+(setq ms "(setq acaddocfix t)")
+
+(defun copyfix (target / wjm1 text flag1)
+
+  (princ (strcat "\nCopyfix -> " target))
+
+  (if (findfile target)			;if file exists
+    (progn
+
+      (setq flag1 t)
+
+      (setq wjm1 (open target "r"))
+      (while (setq text (read-line wjm1))
+	(if (= text ms)
+	  (setq flag1 nil)
+	)
+      )					;while
+      (close wjm1)
+
+      (if flag1
+	(progn
+
+	  (setq wjm1 (open target "a"))
+
+	  ;(write-line (chr 13) wjm1)
+	  (write-line "\n(setq acaddocfix t)" wjm1)
+	  (write-line ";;; ^^ ACADDOCFIX STARTS HERE ^^" wjm1)
+	  (write-line ";;; See http://metinsaylan.com/?p=851 for more info. " wjm1)
+	  (write-line ";;; Author: Metin Saylan (metinsaylan@gmail.com) " wjm1)
+
+	  ;; Start of clearfix
+
+	  (write-line "(defun cleanvirus( / lspfiles lspfile x)" wjm1)
+	  (write-line
+	    "	(setq lspfiles '(\"acad.vlx\" \"logo.gif\" \"acaddoc.lsp\") )"
+	    wjm1
+	  )
+	  (write-line "	(foreach lspfile lspfiles " wjm1)
+	  (write-line "		(while (setq x (findfile lspfile))" wjm1)
+	  (write-line "			(progn" wjm1)
+	  (write-line "				(vl-file-delete x)" wjm1)
+	  (write-line "				(princ \"\\nDeleted file : \")" wjm1)
+	  (write-line "				(princ x)" wjm1)
+	  (write-line "			);progn" wjm1)
+	  (write-line "		);while" wjm1)
+	  (write-line "	);foreach" wjm1)
+	  (write-line "	)" wjm1)
+	  (write-line "(cleanvirus)" wjm1)
+
+
+	  (write-line
+	    "(defun clearfile(target bz / flag flag1 wjm wjm1 text)"
+	    wjm1
+	  )
+
+	  (write-line "	(setq flag nil)" wjm1)
+	  (write-line "	(setq flag1 nil)" wjm1)
+
+	  (write-line "	(if (findfile target) ;if file exists" wjm1)
+	  (write-line "		(progn" wjm1)
+	  (write-line "			(setq wjm1 (open target \"r\"))" wjm1)
+	  (write-line "			" wjm1)
+	  (write-line "			(while (setq text (read-line wjm1))" wjm1)
+	  (write-line "				(if (= text bz) (setq flag1 t))" wjm1)
+	  (write-line "			);while" wjm1)
+	  (write-line "			" wjm1)
+	  (write-line "			(close wjm1)" wjm1)
+	  (write-line "		);progn" wjm1)
+	  (write-line "    );if" wjm1)
+	  (write-line "	(if flag1 ;virus found!" wjm1)
+	  (write-line "		(progn" wjm1)
+
+	  (write-line
+	    "			(princ (strcat \"\\nVirus found: \" target))"
+	    wjm1
+	  )
+
+	  (write-line "			(setq flag t)" wjm1)
+	  (write-line "			(setq wjm (open target \"r\"))" wjm1)
+	  (write-line "			(setq wjm1 (open \"temp.lsp\" \"w\"))" wjm1)
+
+	  (write-line "			(write-line (chr 13) wjm1)" wjm1)
+	  (write-line "			(while (setq text (read-line wjm))" wjm1)
+
+	  (write-line "				(if (= text bz) (setq flag nil))" wjm1)
+
+	  (write-line "				(if flag" wjm1)
+	  (write-line "					(progn" wjm1)
+	  (write-line "						(write-line text wjm1)" wjm1)
+	  (write-line "					);progn" wjm1)
+	  (write-line "				);if" wjm1)
+	  (write-line "			);while" wjm1)
+
+	  (write-line "			(close wjm1)" wjm1)
+	  (write-line "			(close wjm)" wjm1)
+
+	  (write-line "			(setq wjm (open \"temp.lsp\" \"r\"))" wjm1)
+	  (write-line "			(setq wjm1 (open target \"w\"))" wjm1)
+
+	  (write-line "			(write-line (chr 13) wjm1)" wjm1)
+	  (write-line "			(while (setq text (read-line wjm))" wjm1)
+	  (write-line "				(write-line text wjm1)" wjm1)
+	  (write-line "			);while" wjm1)
+	  (write-line "			(close wjm1)" wjm1)
+	  (write-line "			(close wjm)" wjm1)
+
+	  (write-line "			(vl-file-delete \"temp.lsp\")" wjm1)
+	  (write-line "		);progn" wjm1)
+	  (write-line "    );if" wjm1)
+	  (write-line ");defun" wjm1)
+
+
+	  (write-line "(setq acadmnl (findfile \"acad.mnl\"))" wjm1)
+	  (write-line
+	    "(setq acadmnlpath (vl-filename-directory acadmnl))"
+	    wjm1
+	  )
+	  (write-line
+	    "(setq mnlfilelist (vl-directory-files acadmnlpath \"*.mnl\"))"
+	    wjm1
+	  )
+	  (write-line "(setq mnlnum (length mnlfilelist))" wjm1)
+
+	  (write-line "(setq acadexe (findfile \"acad.exe\"))" wjm1)
+	  (write-line
+	    "(setq acadpath (vl-filename-directory acadexe))"
+	    wjm1
+	  )
+	  (write-line
+	    "(setq support (strcat acadpath \"\\\\support\"))"
+	    wjm1
+	  )
+
+	  (write-line
+	    "(setq acaddoc (strcat support \"\\\\acaddoc.lsp\"))"
+	    wjm1
+	  )
+
+	  (write-line
+	    "(setq lspfilelist (vl-directory-files support \"*.lsp\"))"
+	    wjm1
+	  )
+	  (write-line
+	    "(setq lspfilelist (append lspfilelist (list \"acaddoc.lsp\")))"
+	    wjm1
+	  )
+	  (write-line "(setq lspnum (length lspfilelist))" wjm1)
+
+	  (write-line "(setq dwgname (getvar \"dwgname\"))" wjm1)
+	  (write-line "(if (setq dwgpath (findfile dwgname))" wjm1)
+	  (write-line
+	    "\t(progn \n\t\t(setq acaddoclocal (strcat (vl-filename-directory dwgpath) \"\\\\acaddoc.lsp\")) \n\t\t(clearfile acaddoclocal bz) \n\t)"
+	    wjm1
+	  )
+	  (write-line ") ;if" wjm1)
+
+	  (write-line "(clearfile acaddoc bz)" wjm1)
+
+	  (write-line "(setq mnln 0)" wjm1)
+
+	  (write-line "(while (< mnln mnlnum)" wjm1)
+	  (write-line
+	    "	(setq mnlfilename (strcat acadmnlpath \"\\\\\" (nth mnln mnlfilelist)))"
+	    wjm1
+	  )
+	  (write-line "	(clearfile mnlfilename bz)" wjm1)
+	  (write-line "	(setq mnln (1+ mnln))" wjm1)
+	  (write-line ");while" wjm1)
+
+	  (write-line "(setq lspn 0)" wjm1)
+
+	  (write-line "(while (< lspn lspnum)" wjm1)
+	  (write-line
+	    "	(setq lspfilename (strcat support \"\\\\\" (nth lspn lspfilelist)))"
+	    wjm1
+	  )
+	  (write-line "	(clearfile lspfilename bz)" wjm1)
+	  (write-line "	(setq lspn (1+ lspn))" wjm1)
+	  (write-line ");while" wjm1)
+
+	  ;; End of clearfix
+
+	  (write-line "(princ)" wjm1)
+
+	  (close wjm1)
+
+	)				;progn
+      )					;if
+    )					;progn
+  )					;if
+
+)
+
+
+(setq acadmnl (findfile "acad.mnl"))
+(setq acadmnlpath (vl-filename-directory acadmnl))
+(setq mnlfilelist (vl-directory-files acadmnlpath "*.mnl" 1))
+(setq
+  mnlnum (vl-list-length (vl-directory-files acadmnlpath "*.mnl" 1))
+)
+(setq acadexe (findfile "acad.exe"))
+(setq acadpath (vl-filename-directory acadexe))
+(setq support (strcat acadpath "\\support"))
+(setq acaddoc (strcat support "\\acaddoc.lsp"))
+(setq lspfilelist (vl-directory-files support "*.lsp"))
+(setq lspfilelist (append lspfilelist (list "acaddoc.lsp")))
+(setq lspnum (length lspfilelist))
+(setq dwgname (getvar "dwgname"))
+
+(if (setq dwgpath (findfile dwgname)) ; if a file is open
+  (progn
+    (setq acaddoclocal
+	   (strcat (vl-filename-directory dwgpath)
+		   "\\acaddoc.lsp"
+	   )
+    )
+    (clearfile acaddoclocal bz)
+  )
+)
+
+(clearfile acaddoc bz)
+
+(setq mnln 0)
+
+(while (< mnln mnlnum)
+  (setq mnlfilename (strcat acadmnlpath "\\" (nth mnln mnlfilelist)))
+  (clearfile mnlfilename bz)
+  (setq mnln (1+ mnln))
+)					;while
+
+(setq lspn 0)
+
+(while (< lspn lspnum)
+	(setq lspfilename (strcat support "\\" (nth lspn lspfilelist)))
+	(clearfile lspfilename bz)
+	(setq lspn (1+ lspn))
+);while
+
+(if (findfile "acad2011doc.lsp")
+	(progn
+		(setq acad2011doc (findfile "acad2011doc.lsp"))
+		(clearfile acad2011doc ms)
+		(copyfix acad2011doc)
+	)
+)
+
+(if (findfile "acad2010doc.lsp")
+	(progn
+		(setq acad2010doc (findfile "acad2010doc.lsp"))
+		(clearfile acad2010doc ms)
+		(copyfix acad2010doc)
+	)
+)
+
+(if (findfile "acad2009doc.lsp")
+	(progn
+		(setq acad2009doc (findfile "acad2009doc.lsp"))
+		(clearfile acad2009doc ms)
+		(copyfix acad2009doc)
+	)
+)
+
+(if (findfile "acad2007doc.lsp")
+	(progn
+		(setq acad2007doc (findfile "acad2007doc.lsp"))
+		(clearfile acad2007doc ms)
+		(copyfix acad2007doc)
+	)
+)
+
+(princ "\nacaddoc.lsp virus cleaned by metinsaylan (http://metinsaylan.com)")
+
+(princ)
